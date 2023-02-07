@@ -1,8 +1,11 @@
 # Install and run
 
  > curl https://raw.githubusercontent.com/FinNLP/humannames/master/index.json >> NameSurname.json
+ > 
  > curl https://www.gutenberg.org/cache/epub/69962/pg69962.txt >> book
+ > 
  > JAVA_OPTS="-Xmx16096M -XX:+UseG1GC" sbt run
+ > 
  
 # Output
  > Loading the text (1142 MB) in memory...
