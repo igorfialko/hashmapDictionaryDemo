@@ -9,17 +9,7 @@ object Hello extends App {
   val dictExtract = """\s"([A-Za-z]+)"\:\s1\,""".r
   val someFile = new File("book")
   val fileSizeMB = someFile.length/1024/1024
-  val bookLines = fromFile("book").getLines
-  val wordsIter = bookLines.flatMap { line => 
-    //prepare list of lowercase words
-    val wordsRaw = line.split(" ").map(_.trim.toLowerCase).filter { w =>
-      w match {
-        case lettersOnly(_) => true
-        case _ => false
-      } 
-    }
-    wordsRaw
-  }
+  val bookLinesIter = fromFile("book").getLines
  
   //prepare the dictionary
   val dictionaryLines = fromFile("NameSurname.json").getLines
@@ -32,10 +22,24 @@ object Hello extends App {
 
   print(f"Loading the text (${fileSizeMB}%d MB) in memory...")
   var currentTime = System.currentTimeMillis()
-  val words = wordsIter.toList
+  val bookLines = bookLinesIter.toList
   var endTime = System.currentTimeMillis()
   println(f"Loading the text (${fileSizeMB}%d MB) in memory took ${(endTime-currentTime)/1000f}%.4f seconds")
-  
+ 
+  print(f"Cleaning and transforming the text")
+   currentTime = System.currentTimeMillis()
+  val words = bookLines.par.flatMap { line => 
+    //prepare list of lowercase words
+    val wordsRaw = line.split(" ").map(_.trim.toLowerCase).filter { w =>
+      w match {
+        case lettersOnly(_) => true
+        case _ => false
+      } 
+    }
+    wordsRaw
+  }
+  endTime = System.currentTimeMillis()
+  println(f"Cleaning and transforming the text took ${(endTime-currentTime)/1000f}%.4f seconds")
 
   println("Loading the dictionary in memory...")
   currentTime = System.currentTimeMillis()
@@ -56,7 +60,7 @@ object Hello extends App {
   val names = words.filter( word => dictHM.contains(word) )
   endTime = System.currentTimeMillis()
   println(f"Locating names in text took ${(endTime-currentTime)/1000f}%.4f seconds")
-  
+
   val namesCount = names.length
   val wordsCount = words.length
   println(f"Found ${namesCount}%d names in ${wordsCount} words long text.")
