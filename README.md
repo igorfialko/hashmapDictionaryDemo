@@ -11,7 +11,9 @@
  >
  > Loading the text (1142 MB) in memory took 17.7740 seconds
  >
- > Cleaning and transforming the textCleaning and transforming the text took 17.4370 seconds
+ > Cleaning and transforming the text
+ >
+ > Cleaning and transforming the text took 17.4370 seconds
  >
  > Loading the dictionary in memory...
  >
